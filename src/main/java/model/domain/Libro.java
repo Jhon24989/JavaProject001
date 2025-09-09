@@ -1,4 +1,4 @@
-package modelo.dominio;
+package model.domain;
 
 public class Libro {
     private String isbn;

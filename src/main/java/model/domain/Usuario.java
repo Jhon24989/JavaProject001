@@ -1,4 +1,4 @@
-package modelo.dominio;
+package model.domain;
 
 public class Usuario {
     private String id;

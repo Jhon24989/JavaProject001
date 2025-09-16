@@ -1,7 +1,7 @@
 package repository.impl;
 
-import model.domain.Libro;
-import repository.interfaces.LibroRepoInterface;
+import model.domain.Book;
+import repository.interfaces.BookRepositoryInterface;
 import util.DBConnection;
 
 import java.sql.*;
@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class LibroRepo implements LibroRepoInterface {
+public class BookRepository implements BookRepositoryInterface {
 
-    private Libro map(ResultSet rs) throws SQLException {
-        return new Libro(
+    private Book map(ResultSet rs) throws SQLException {
+        return new Book(
                 rs.getString("isbn"),
                 rs.getString("titulo"),
                 rs.getString("autor"),
@@ -20,7 +20,7 @@ public class LibroRepo implements LibroRepoInterface {
     }
 
     @Override
-    public void crear(Libro l) {
+    public void crear(Book l) {
         String sql = "INSERT INTO libros (isbn,titulo,autor,disponible) VALUES (?,?,?,?)";
         try (Connection c = DBConnection.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
@@ -33,7 +33,7 @@ public class LibroRepo implements LibroRepoInterface {
     }
 
     @Override
-    public void actualizar(Libro l) {
+    public void actualizar(Book l) {
         String sql = "UPDATE libros SET titulo=?, autor=?, disponible=? WHERE isbn=?";
         try (Connection c = DBConnection.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
@@ -56,7 +56,7 @@ public class LibroRepo implements LibroRepoInterface {
     }
 
     @Override
-    public Optional<Libro> buscarPorIsbn(String isbn) {
+    public Optional<Book> buscarPorIsbn(String isbn) {
         String sql = "SELECT isbn,titulo,autor,disponible FROM libros WHERE isbn=?";
         try (Connection c = DBConnection.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {

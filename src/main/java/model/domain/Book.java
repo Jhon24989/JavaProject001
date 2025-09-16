@@ -1,14 +1,14 @@
 package model.domain;
 
-public class Libro {
+public class Book {
     private String isbn;
     private String titulo;
     private String autor;
     private boolean disponible;
 
-    public Libro() {}
+    public Book() {}
 
-    public Libro(String isbn, String titulo, String autor, boolean disponible) {
+    public Book(String isbn, String titulo, String autor, boolean disponible) {
         this.isbn = isbn;
         this.titulo = titulo;
         this.autor = autor;

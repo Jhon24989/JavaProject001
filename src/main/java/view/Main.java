@@ -1,9 +1,14 @@
 package view;
 
+import model.domain.Book;
 import model.domain.Rol;
 import model.domain.User;
+import services.Impl.BookServiceImpl;
+import services.Impl.LoanServiceImpl;
 import services.Impl.UserServiceImpl;
-import services.impl.UserServiceImpl;
+import services.Impl.UserServiceImpl;
+import services.interfaces.BookServiceInterface;
+import services.interfaces.LoanServiceInterface;
 import services.interfaces.UserServiceInterface;
 
 import java.util.Optional;
@@ -14,7 +19,7 @@ public class Main {
     private final Scanner sc = new Scanner(System.in);
     private final UserServiceInterface usuarioService = new UserServiceImpl();
     private final BookServiceInterface libroService = new BookServiceImpl();
-    private final LoanServiceInterface prestamoService = new PrestamoServiceImpl();
+    private final LoanServiceInterface prestamoService = new LoanServiceImpl();
 
     public void mostrar() {
         boolean salir = false;
@@ -34,7 +39,7 @@ public class Main {
                 case "3" -> prestamoService.listarTodosJoin().forEach(System.out::println);
                 case "4" -> {
                     List<String> data = usuarioService.listarConPrestamosActivos();
-                    String path = ExportarCSV.exportar("usuarios.csv", data);
+                    String path = ExportCSV.exportar("usuarios.csv", data);
                     System.out.println("Exportado a: " + path);
                 }
                 case "5" -> {
@@ -50,7 +55,7 @@ public class Main {
                                     p.getFechaPrestamo()+","+
                                     p.getFechaDevolucion()
                     ));
-                    String path = ExportarCSV.exportar("prestamos.csv", lines);
+                    String path = ExportCSV.exportar("prestamos.csv", lines);
                     System.out.println("Exportado a: " + path);
                 }
                 case "6" -> salir = true;
@@ -77,14 +82,14 @@ public class Main {
                     System.out.print("Email: "); String e = sc.nextLine();
                     System.out.print("Password: "); String p = sc.nextLine();
                     System.out.print("Rol (ADMIN/USUARIO): "); String r = sc.nextLine().toUpperCase();
-                    usuarioService.registrar(new Usuario(0, n, e, p, Rol.valueOf(r)));
+                    usuarioService.registrar(new User(0, n, e, p, Rol.valueOf(r)));
                     System.out.println("Usuario creado.");
                 }
                 case "3" -> {
                     System.out.print("ID: "); int id = Integer.parseInt(sc.nextLine());
                     var uOpt = usuarioService.buscarPorId(id);
                     if (uOpt.isEmpty()) { System.out.println("No existe"); break; }
-                    Usuario u = uOpt.get();
+                    User u = uOpt.get();
                     System.out.print("Nuevo nombre ("+u.getNombre()+"): "); String n = sc.nextLine(); if(!n.isBlank()) u.setNombre(n);
                     System.out.print("Nuevo email ("+u.getEmail()+"): "); String e = sc.nextLine(); if(!e.isBlank()) u.setEmail(e);
                     System.out.print("Nueva password: "); String p = sc.nextLine(); if(!p.isBlank()) u.setPassword(p);
@@ -120,7 +125,7 @@ public class Main {
                     System.out.print("ISBN: "); String isbn = sc.nextLine();
                     System.out.print("Título: "); String titulo = sc.nextLine();
                     System.out.print("Autor: "); String autor = sc.nextLine();
-                    libroService.crear(new Libro(isbn, titulo, autor, true));
+                    libroService.crear(new Book(isbn, titulo, autor, true));
                     System.out.println("Libro agregado.");
                 }
                 case "3" -> {

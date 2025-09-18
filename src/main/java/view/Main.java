@@ -2,6 +2,8 @@ package view;
 
 import model.domain.Rol;
 import model.domain.User;
+
+import services.Impl.UserServiceImpl;
 import services.interfaces.UserServiceInterface;
 
 import java.util.List;
@@ -9,9 +11,8 @@ import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {
-
-    private final Scanner sc = new Scanner(System.in);
-    private final UserServiceInterface usuarioService = new UserServiceInterface() {
+    private static final Scanner sc = new Scanner(System.in);
+    private static final UserServiceInterface userService = new UserServiceInterface() {
         @Override
         public Optional<User> login(String email, String password) {
             return Optional.empty();
@@ -47,135 +48,41 @@ public class Main {
             return List.of();
         }
     };
-    private final BookServiceInterface libroService = new BookServiceImpl();
-    private final LoanServiceInterface prestamoService = new PrestamoServiceImpl();
 
-    public void mostrar() {
-        boolean salir = false;
-        while (!salir) {
-            System.out.println("\n--- Panel ADMIN ---");
-            System.out.println("1. Gestionar Usuarios");
-            System.out.println("2. Gestionar Libros");
-            System.out.println("3. Ver Préstamos (JOIN)");
-            System.out.println("4. Exportar usuarios a CSV");
-            System.out.println("5. Exportar préstamos a CSV");
-            System.out.println("6. Salir");
-            System.out.print("Opción: ");
-            String op = sc.nextLine();
-            switch (op) {
-                case "1" -> gestionarUsuarios();
-                case "2" -> gestionarLibros();
-                case "3" -> prestamoService.listarTodosJoin().forEach(System.out::println);
-                case "4" -> {
-                    List<String> data = usuarioService.listarConPrestamosActivos();
-                    String path = ExportarCSV.exportar("usuarios.csv", data);
-                    System.out.println("Exportado a: " + path);
-                }
-                case "5" -> {
-                    var prestamos = prestamoService.listarTodosJoin();
-                    java.util.ArrayList<String> lines = new java.util.ArrayList<>();
-                    lines.add("id,usuario,email,libro,isbn,prestamo,devolucion");
-                    prestamos.forEach(p -> lines.add(
-                            p.getId()+","+
-                                    (p.getUsuario()!=null?p.getUsuario().getNombre():"")+","+
-                                    (p.getUsuario()!=null?p.getUsuario().getEmail():"")+","+
-                                    (p.getLibro()!=null?p.getLibro().getTitulo():"")+","+
-                                    p.getLibroIsbn()+","+
-                                    p.getFechaPrestamo()+","+
-                                    p.getFechaDevolucion()
-                    ));
-                    String path = ExportarCSV.exportar("prestamos.csv", lines);
-                    System.out.println("Exportado a: " + path);
-                }
-                case "6" -> salir = true;
-                default -> System.out.println("Opción inválida");
-            }
+    public static void main(String[] args) {
+        System.out.println("===== Biblioteca Virtual =====");
+        User u = login();
+        if (u == null) return;
+
+        if (u.getRol() == Rol.ADMIN) {
+            new MainAdmin().mostrar();
+        } else {
+            new MainUser().mostrar(u.getId());
         }
     }
 
-    private void gestionarUsuarios() {
-        boolean back = false;
-        while(!back) {
-            System.out.println("\n--- Usuarios ---");
-            System.out.println("1. Listar (JOIN conteo préstamos)");
-            System.out.println("2. Crear");
-            System.out.println("3. Editar");
-            System.out.println("4. Eliminar");
-            System.out.println("5. Volver");
-            System.out.print("Opción: ");
-            String op = sc.nextLine();
-            switch (op) {
-                case "1" -> usuarioService.listarConPrestamosActivos().forEach(System.out::println);
-                case "2" -> {
-                    System.out.print("Nombre: "); String n = sc.nextLine();
-                    System.out.print("Email: "); String e = sc.nextLine();
-                    System.out.print("Password: "); String p = sc.nextLine();
-                    System.out.print("Rol (ADMIN/USUARIO): "); String r = sc.nextLine().toUpperCase();
-                    usuarioService.registrar(new Usuario(0, n, e, p, Rol.valueOf(r)));
-                    System.out.println("Usuario creado.");
-                }
-                case "3" -> {
-                    System.out.print("ID: "); int id = Integer.parseInt(sc.nextLine());
-                    var uOpt = usuarioService.buscarPorId(id);
-                    if (uOpt.isEmpty()) { System.out.println("No existe"); break; }
-                    Usuario u = uOpt.get();
-                    System.out.print("Nuevo nombre ("+u.getNombre()+"): "); String n = sc.nextLine(); if(!n.isBlank()) u.setNombre(n);
-                    System.out.print("Nuevo email ("+u.getEmail()+"): "); String e = sc.nextLine(); if(!e.isBlank()) u.setEmail(e);
-                    System.out.print("Nueva password: "); String p = sc.nextLine(); if(!p.isBlank()) u.setPassword(p);
-                    System.out.print("Nuevo rol ("+u.getRol()+"): "); String r = sc.nextLine(); if(!r.isBlank()) u.setRol(Rol.valueOf(r.toUpperCase()));
-                    usuarioService.actualizar(u);
-                    System.out.println("Usuario actualizado.");
-                }
-                case "4" -> {
-                    System.out.print("ID: "); int id = Integer.parseInt(sc.nextLine());
-                    usuarioService.eliminar(id);
-                    System.out.println("Usuario eliminado.");
-                }
-                case "5" -> back = true;
-                default -> System.out.println("Opción inválida");
+    private static User login() {
+        System.out.print("Email: ");
+        String email = sc.nextLine();
+        System.out.print("Password: ");
+        String pass = sc.nextLine();
+
+        Optional<User> u = userService.login(email, pass);
+        if (u.isPresent()) return u.get();
+
+        System.out.println("No existe o password incorrecto.");
+        System.out.print("¿Deseas registrarte? (s/n): ");
+        if (sc.nextLine().trim().equalsIgnoreCase("s")) {
+            System.out.print("Nombre: "); String nombre = sc.nextLine();
+            System.out.print("Password: "); String pwd = sc.nextLine();
+            User nuevo = new User(0, nombre, email, pwd, Rol.USUARIO);
+            try {
+                userService.registrar(nuevo);
+                System.out.println("Registrado. Vuelve a iniciar sesión.");
+            } catch (Exception ex) {
+                System.out.println("Error: " + ex.getMessage());
             }
         }
+        return null;
     }
-
-    private void gestionarLibros() {
-        boolean back = false;
-        while(!back) {
-            System.out.println("\n--- Libros ---");
-            System.out.println("1. Listar (JOIN conteo préstamos)");
-            System.out.println("2. Agregar");
-            System.out.println("3. Editar");
-            System.out.println("4. Eliminar");
-            System.out.println("5. Volver");
-            System.out.print("Opción: ");
-            String op = sc.nextLine();
-            switch (op) {
-                case "1" -> libroService.listarConPrestamosActivos().forEach(System.out::println);
-                case "2" -> {
-                    System.out.print("ISBN: "); String isbn = sc.nextLine();
-                    System.out.print("Título: "); String titulo = sc.nextLine();
-                    System.out.print("Autor: "); String autor = sc.nextLine();
-                    libroService.crear(new Libro(isbn, titulo, autor, true));
-                    System.out.println("Libro agregado.");
-                }
-                case "3" -> {
-                    System.out.print("ISBN: "); String isbn = sc.nextLine();
-                    var libro = libroService.buscarPorIsbn(isbn).orElse(null);
-                    if (libro == null) { System.out.println("No existe"); break; }
-                    System.out.print("Nuevo título ("+libro.getTitulo()+"): "); String t = sc.nextLine(); if(!t.isBlank()) libro.setTitulo(t);
-                    System.out.print("Nuevo autor ("+libro.getAutor()+"): "); String a = sc.nextLine(); if(!a.isBlank()) libro.setAutor(a);
-                    System.out.print("Disponible (SI/NO): "); String d = sc.nextLine(); if(!d.isBlank()) libro.setDisponible(d.equalsIgnoreCase("SI"));
-                    libroService.actualizar(libro);
-                    System.out.println("Libro actualizado.");
-                }
-                case "4" -> {
-                    System.out.print("ISBN: "); String isbn = sc.nextLine();
-                    libroService.eliminar(isbn);
-                    System.out.println("Libro eliminado.");
-                }
-                case "5" -> back = true;
-                default -> System.out.println("Opción inválida");
-            }
-        }
-    }
-
 }

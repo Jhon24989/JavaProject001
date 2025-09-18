@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class BookRepository implements BookRepositoryInterface {
+public class BookRepositoryImpl implements BookRepositoryInterface {
 
     private Book map(ResultSet rs) throws SQLException {
         return new Book(

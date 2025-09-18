@@ -2,57 +2,31 @@ package view;
 
 import model.domain.Rol;
 import model.domain.User;
-
 import services.Impl.UserServiceImpl;
 import services.interfaces.UserServiceInterface;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {
     private static final Scanner sc = new Scanner(System.in);
-    private static final UserServiceInterface userService = new UserServiceInterface() {
-        @Override
-        public Optional<User> login(String email, String password) {
-            return Optional.empty();
-        }
-
-        @Override
-        public void registrar(User u) {
-
-        }
-
-        @Override
-        public void actualizar(User u) {
-
-        }
-
-        @Override
-        public void eliminar(int id) {
-
-        }
-
-        @Override
-        public Optional<User> buscarPorEmail(String email) {
-            return Optional.empty();
-        }
-
-        @Override
-        public Optional<User> buscarPorId(int id) {
-            return Optional.empty();
-        }
-
-        @Override
-        public List<String> listarConPrestamosActivos() {
-            return List.of();
-        }
-    };
+    private static final UserServiceInterface userService = new UserServiceImpl();
 
     public static void main(String[] args) {
         System.out.println("===== Biblioteca Virtual =====");
-        User u = login();
-        if (u == null) return;
+
+        User u = null;
+        while (u == null) {
+            u = login();
+            if (u == null) {
+                System.out.print("¿Deseas intentar de nuevo? (s = sí / otra tecla = salir): ");
+                String r = sc.nextLine();
+                if (!r.equalsIgnoreCase("s")) {
+                    System.out.println("Saliendo...");
+                    return;
+                }
+            }
+        }
 
         if (u.getRol() == Rol.ADMIN) {
             new MainAdmin().mostrar();
@@ -63,25 +37,44 @@ public class Main {
 
     private static User login() {
         System.out.print("Email: ");
-        String email = sc.nextLine();
+        String email = sc.nextLine().trim();
         System.out.print("Password: ");
-        String pass = sc.nextLine();
+        String pass = sc.nextLine().trim();
 
-        Optional<User> u = userService.login(email, pass);
-        if (u.isPresent()) return u.get();
-
-        System.out.println("No existe o password incorrecto.");
-        System.out.print("¿Deseas registrarte? (s/n): ");
-        if (sc.nextLine().trim().equalsIgnoreCase("s")) {
-            System.out.print("Nombre: "); String nombre = sc.nextLine();
-            System.out.print("Password: "); String pwd = sc.nextLine();
-            User nuevo = new User(0, nombre, email, pwd, Rol.USUARIO);
-            try {
-                userService.registrar(nuevo);
-                System.out.println("Registrado. Vuelve a iniciar sesión.");
-            } catch (Exception ex) {
-                System.out.println("Error: " + ex.getMessage());
+        try {
+            Optional<User> uOpt = userService.login(email, pass);
+            if (uOpt.isPresent()) {
+                System.out.println("Login exitoso. Bienvenido " + uOpt.get().getNombre());
+                return uOpt.get();
             }
+
+            System.out.println("No existe o password incorrecto.");
+            System.out.print("¿Deseas registrarte con este email? (s/n): ");
+            if (sc.nextLine().trim().equalsIgnoreCase("s")) {
+                System.out.print("Nombre: ");
+                String nombre = sc.nextLine().trim();
+                System.out.print("Password: ");
+                String pwd = sc.nextLine().trim();
+
+                // 🔹 Si el email termina en @admin.com → ADMIN
+                Rol rol = email.endsWith("@admin.com") ? Rol.ADMIN : Rol.USUARIO;
+
+                User nuevo = new User(0, nombre, email, pwd, rol);
+                userService.registrar(nuevo);
+                System.out.println("Registrado correctamente como " + rol + ". Intentando iniciar sesión automáticamente...");
+
+                Optional<User> nuevoLog = userService.login(email, pwd);
+                if (nuevoLog.isPresent()) {
+                    System.out.println("Inicio de sesión automático exitoso.");
+                    return nuevoLog.get();
+                } else {
+                    System.out.println("No se pudo iniciar sesión automáticamente. Intenta iniciar sesión manualmente.");
+                    return null;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error durante la operación: " + e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }

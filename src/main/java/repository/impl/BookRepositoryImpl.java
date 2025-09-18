@@ -94,7 +94,7 @@ public class BookRepositoryImpl implements BookRepositoryInterface {
     @Override
     public List<String> buscarPorTituloConJoin(String titulo) {
         List<String> lista = new ArrayList<>();
-        String sql = "SELECT l.isbn, l.titulo, l.autor, l.disponible, COUNT(p.id) AS prestamos_activos " +
+        String sql = "SELECT l.id, l.titulo, l.autor, l.disponible, COUNT(p.id) AS prestamos_activos " +
                 "FROM libros l " +
                 "LEFT JOIN prestamos p ON p.libro_isbn = l.isbn AND p.fecha_devolucion IS NULL " +
                 "WHERE l.titulo LIKE ? " +

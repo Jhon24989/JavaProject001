@@ -3,12 +3,13 @@ package services.Impl;
 import model.domain.User;
 import repository.impl.UserRepositoryImpl;
 import repository.interfaces.UserRepositoryInterface;
+import services.interfaces.UserServiceInterface;
 import util.Validation;
 
 import java.util.List;
 import java.util.Optional;
 
-public class UserServiceImpl {
+public class UserServiceImpl implements UserServiceInterface {
 
     private final UserRepositoryInterface repo = new UserRepositoryImpl();
 

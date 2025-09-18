@@ -2,17 +2,51 @@ package view;
 
 import model.domain.Rol;
 import model.domain.User;
-import services.Impl.UserServiceImpl;
-import services.impl.UserServiceImpl;
 import services.interfaces.UserServiceInterface;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {
 
     private final Scanner sc = new Scanner(System.in);
-    private final UserServiceInterface usuarioService = new UserServiceImpl();
+    private final UserServiceInterface usuarioService = new UserServiceInterface() {
+        @Override
+        public Optional<User> login(String email, String password) {
+            return Optional.empty();
+        }
+
+        @Override
+        public void registrar(User u) {
+
+        }
+
+        @Override
+        public void actualizar(User u) {
+
+        }
+
+        @Override
+        public void eliminar(int id) {
+
+        }
+
+        @Override
+        public Optional<User> buscarPorEmail(String email) {
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<User> buscarPorId(int id) {
+            return Optional.empty();
+        }
+
+        @Override
+        public List<String> listarConPrestamosActivos() {
+            return List.of();
+        }
+    };
     private final BookServiceInterface libroService = new BookServiceImpl();
     private final LoanServiceInterface prestamoService = new PrestamoServiceImpl();
 

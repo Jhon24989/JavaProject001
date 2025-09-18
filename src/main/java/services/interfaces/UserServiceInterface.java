@@ -7,11 +7,11 @@ import java.util.Optional;
 public class UserServiceInterface {
 
     Optional<User> login(String email, String password);
-    void registrar(User u);
-    void actualizar(User u);
-    void eliminar(int id);
+    public void registrar(User u);
+    public void actualizar(User u);
+    public void eliminar(int id);
     Optional<User> buscarPorEmail(String email);
-    Optional<User> buscarPorId(int id);
-    List<String> listarConPrestamosActivos();
+    public Optional<User> buscarPorId(int id);
+    public List<String> listarConPrestamosActivos();
 
 }

@@ -56,7 +56,6 @@ public class Main {
                 System.out.print("Password: ");
                 String pwd = sc.nextLine().trim();
 
-                // 🔹 Si el email termina en @admin.com → ADMIN
                 Rol rol = email.endsWith("@admin.com") ? Rol.ADMIN : Rol.USUARIO;
 
                 User nuevo = new User(0, nombre, email, pwd, rol);

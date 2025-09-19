@@ -12,25 +12,25 @@ public class Validation {
     public static String validarEmail(String email) {
         if (email == null || email.isBlank()) return "El email no puede estar vacío";
         if (!EMAIL.matcher(email).matches()) return "Email inválido";
-        return null; // ✅ válido
+        return null;
     }
 
     public static String validarPassword(String password) {
         if (password == null || password.isBlank()) return "La contraseña no puede estar vacía";
         if (!PASSWORD.matcher(password).matches()) return "Password mínimo 6 caracteres";
-        return null; // ✅ válido
+        return null;
     }
 
     public static String validarISBN(String isbn) {
         if (isbn == null || isbn.isBlank()) return "El ISBN no puede estar vacío";
         if (!ISBN.matcher(isbn).matches()) return "ISBN inválido";
-        return null; // ✅ válido
+        return null;
     }
 
     public static String validarNombre(String nombre) {
         if (nombre == null || nombre.isBlank()) return "El nombre no puede estar vacío";
         if (!NOMBRE.matcher(nombre).matches()) return "Nombre inválido";
-        return null; // ✅ válido
+        return null;
     }
 }
 

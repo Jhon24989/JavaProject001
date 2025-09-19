@@ -12,7 +12,6 @@ import java.util.Optional;
 
 public class UserRepositoryImpl implements UserRepositoryInterface {
 
-    // === Mapear ResultSet a User ===
     private User map(ResultSet rs) throws SQLException {
         return new User(
                 rs.getInt("id"),
@@ -23,7 +22,6 @@ public class UserRepositoryImpl implements UserRepositoryInterface {
         );
     }
 
-    // === Login ===
     @Override
     public Optional<User> login(String email, String password) {
         String sql = "SELECT id, nombre, email, password, rol FROM usuarios WHERE email=? AND password=?";
@@ -42,7 +40,6 @@ public class UserRepositoryImpl implements UserRepositoryInterface {
         return Optional.empty();
     }
 
-    // === Buscar por email ===
     @Override
     public Optional<User> buscarPorEmail(String email) {
         String sql = "SELECT id, nombre, email, password, rol FROM usuarios WHERE email=?";
@@ -60,7 +57,6 @@ public class UserRepositoryImpl implements UserRepositoryInterface {
         return Optional.empty();
     }
 
-    // === Buscar por id ===
     @Override
     public Optional<User> buscarPorId(int id) {
         String sql = "SELECT id, nombre, email, password, rol FROM usuarios WHERE id=?";
@@ -78,7 +74,6 @@ public class UserRepositoryImpl implements UserRepositoryInterface {
         return Optional.empty();
     }
 
-    // === Crear usuario ===
     @Override
     public void crear(User u) {
         String sql = "INSERT INTO usuarios (nombre, email, password, rol) VALUES (?, ?, ?, ?)";
@@ -100,7 +95,6 @@ public class UserRepositoryImpl implements UserRepositoryInterface {
         }
     }
 
-    // === Actualizar usuario ===
     @Override
     public void actualizar(User u) {
         String sql = "UPDATE usuarios SET nombre=?, email=?, password=?, rol=? WHERE id=?";
@@ -117,7 +111,6 @@ public class UserRepositoryImpl implements UserRepositoryInterface {
         }
     }
 
-    // === Eliminar usuario ===
     @Override
     public void eliminar(int id) {
         String sql = "DELETE FROM usuarios WHERE id=?";
@@ -130,7 +123,6 @@ public class UserRepositoryImpl implements UserRepositoryInterface {
         }
     }
 
-    // === Listar todos los usuarios ===
     @Override
     public List<User> listar() {
         List<User> lista = new ArrayList<>();
@@ -147,7 +139,6 @@ public class UserRepositoryImpl implements UserRepositoryInterface {
         return lista;
     }
 
-    // === Listar usuarios con préstamos activos ===
     @Override
     public List<String> listarConPrestamosActivos() {
         List<String> lista = new ArrayList<>();

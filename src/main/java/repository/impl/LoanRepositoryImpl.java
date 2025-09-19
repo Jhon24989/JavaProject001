@@ -20,7 +20,9 @@ public class LoanRepositoryImpl implements LoanRepositoryInterface {
             ps.setString(2, p.getLibroIsbn());
             ps.setDate(3, Date.valueOf(p.getFechaPrestamo()));
             ps.executeUpdate();
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -31,7 +33,9 @@ public class LoanRepositoryImpl implements LoanRepositoryInterface {
             ps.setDate(1, Date.valueOf(fecha));
             ps.setInt(2, prestamoId);
             ps.executeUpdate();
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -44,7 +48,9 @@ public class LoanRepositoryImpl implements LoanRepositoryInterface {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) return rs.getInt("id");
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -52,7 +58,8 @@ public class LoanRepositoryImpl implements LoanRepositoryInterface {
     public List<Loan> listarTodosJoin() {
         List<Loan> lista = new ArrayList<>();
         String sql = "SELECT p.id, p.usuario_id, p.libro_isbn, p.fecha_prestamo, p.fecha_devolucion, " +
-                "u.nombre, u.email, u.rol, l.titulo, l.autor, l.disponible " +
+                "u.id AS user_id, u.nombre, u.email, u.rol, " +
+                "l.isbn, l.titulo, l.autor, l.disponible " +
                 "FROM prestamos p " +
                 "JOIN usuarios u ON u.id = p.usuario_id " +
                 "JOIN libros l ON l.isbn = p.libro_isbn " +
@@ -68,13 +75,29 @@ public class LoanRepositoryImpl implements LoanRepositoryInterface {
                         rs.getDate("fecha_prestamo").toLocalDate(),
                         rs.getDate("fecha_devolucion") != null ? rs.getDate("fecha_devolucion").toLocalDate() : null
                 );
-                User u = new User(rs.getInt("usuario_id"), rs.getString("nombre"), rs.getString("email"), "", Rol.valueOf(rs.getString("rol")));
-                Book l = new Book(rs.getString("libro_isbn"), rs.getString("titulo"), rs.getString("autor"), rs.getBoolean("disponible"));
+
+                User u = new User(
+                        rs.getInt("user_id"),
+                        rs.getString("nombre"),
+                        rs.getString("email"),
+                        "", // password no se necesita aquí
+                        Rol.valueOf(rs.getString("rol"))
+                );
+
+                Book l = new Book(
+                        rs.getString("isbn"),
+                        rs.getString("titulo"),
+                        rs.getString("autor"),
+                        rs.getBoolean("disponible")
+                );
+
                 pr.setUsuario(u);
                 pr.setLibro(l);
                 lista.add(pr);
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return lista;
     }
 
@@ -82,7 +105,7 @@ public class LoanRepositoryImpl implements LoanRepositoryInterface {
     public List<Loan> listarPorUsuarioJoin(int usuarioId) {
         List<Loan> lista = new ArrayList<>();
         String sql = "SELECT p.id, p.usuario_id, p.libro_isbn, p.fecha_prestamo, p.fecha_devolucion, " +
-                "l.titulo, l.autor, l.disponible " +
+                "l.isbn, l.titulo, l.autor, l.disponible " +
                 "FROM prestamos p " +
                 "JOIN libros l ON l.isbn = p.libro_isbn " +
                 "WHERE p.usuario_id=? " +
@@ -99,12 +122,22 @@ public class LoanRepositoryImpl implements LoanRepositoryInterface {
                             rs.getDate("fecha_prestamo").toLocalDate(),
                             rs.getDate("fecha_devolucion") != null ? rs.getDate("fecha_devolucion").toLocalDate() : null
                     );
-                    Book l = new Book(rs.getString("libro_isbn"), rs.getString("titulo"), rs.getString("autor"), rs.getBoolean("disponible"));
+
+                    Book l = new Book(
+                            rs.getString("isbn"),
+                            rs.getString("titulo"),
+                            rs.getString("autor"),
+                            rs.getBoolean("disponible")
+                    );
+
                     pr.setLibro(l);
                     lista.add(pr);
                 }
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return lista;
     }
 }
+

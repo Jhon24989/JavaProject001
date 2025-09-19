@@ -20,7 +20,6 @@ public class BookRepositoryImpl implements BookRepositoryInterface {
         );
     }
 
-    // === Crear libro ===
     @Override
     public void crear(Book l) {
         String sql = "INSERT INTO libros (isbn, titulo, autor, disponible) VALUES (?, ?, ?, ?)";
@@ -36,7 +35,6 @@ public class BookRepositoryImpl implements BookRepositoryInterface {
         }
     }
 
-    // === Actualizar libro ===
     @Override
     public void actualizar(Book l) {
         String sql = "UPDATE libros SET titulo=?, autor=?, disponible=? WHERE isbn=?";
@@ -52,7 +50,6 @@ public class BookRepositoryImpl implements BookRepositoryInterface {
         }
     }
 
-    // === Eliminar libro ===
     @Override
     public void eliminar(String isbn) {
         String sql = "DELETE FROM libros WHERE isbn=?";
@@ -65,7 +62,6 @@ public class BookRepositoryImpl implements BookRepositoryInterface {
         }
     }
 
-    // === Buscar libro por ISBN ===
     @Override
     public Optional<Book> buscarPorIsbn(String isbn) {
         String sql = "SELECT isbn, titulo, autor, disponible FROM libros WHERE isbn=?";

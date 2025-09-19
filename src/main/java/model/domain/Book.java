@@ -26,6 +26,12 @@ public class Book {
 
     @Override
     public String toString() {
-        return String.format("%s - %s (%s) %s", isbn, titulo, autor, disponible? "[Disponible]":"[Prestado]");
+        return String.format(
+                "ISBN: %s\nTítulo: %s\nAutor: %s\nEstado: %s",
+                isbn,
+                titulo,
+                autor,
+                disponible ? "[Disponible]" : "[Prestado]"
+        );
     }
 }

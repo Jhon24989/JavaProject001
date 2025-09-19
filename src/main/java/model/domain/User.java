@@ -30,6 +30,9 @@ public class User extends Person {
 
     @Override
     public String toString() {
-        return String.format("%d - %s <%s> [%s]", id, nombre, email, rol);
+        return String.format(
+                "ID: %d\nNombre: %s\nEmail: %s\nRol: %s",
+                id, nombre, email, rol
+        );
     }
 }

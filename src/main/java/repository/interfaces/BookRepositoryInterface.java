@@ -9,6 +9,9 @@ public interface BookRepositoryInterface {
     void actualizar(Book l);
     void eliminar(String isbn);
     Optional<Book> buscarPorIsbn(String isbn);
+
+    List<Book> listar();
+
     List<String> listarConPrestamosActivos(); // JOIN
     List<String> buscarPorTituloConJoin(String titulo); // JOIN + filtro
 }

@@ -18,5 +18,8 @@ public interface UserRepositoryInterface {
 
     void eliminar(int id);
 
+    // === Listar todos los usuarios ===
+    List<User> listar();
+
     List<String> listarConPrestamosActivos();
 }

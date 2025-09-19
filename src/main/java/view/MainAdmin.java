@@ -11,48 +11,13 @@ import services.interfaces.LoanServiceInterface;
 import services.interfaces.UserServiceInterface;
 import util.ExportCSV;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class MainAdmin {
     private final Scanner sc = new Scanner(System.in);
-    private final UserServiceInterface usuarioService = new UserServiceInterface() {
-        @Override
-        public Optional<User> login(String email, String password) {
-            return Optional.empty();
-        }
-
-        @Override
-        public void registrar(User u) {
-
-        }
-
-        @Override
-        public void actualizar(User u) {
-
-        }
-
-        @Override
-        public void eliminar(int id) {
-
-        }
-
-        @Override
-        public Optional<User> buscarPorEmail(String email) {
-            return Optional.empty();
-        }
-
-        @Override
-        public Optional<User> buscarPorId(int id) {
-            return Optional.empty();
-        }
-
-        @Override
-        public List<String> listarConPrestamosActivos() {
-            return List.of();
-        }
-    };
+    private final UserServiceInterface usuarioService = new UserServiceImpl(); // ✅ usar la implementación real
     private final BookServiceInterface libroService = new BookServiceImpl();
     private final LoanServiceInterface prestamoService = new LoanServiceImpl();
 
@@ -62,7 +27,7 @@ public class MainAdmin {
             System.out.println("\n--- Panel ADMIN ---");
             System.out.println("1. Gestionar Usuarios");
             System.out.println("2. Gestionar Libros");
-            System.out.println("3. Ver Préstamos (JOIN)");
+            System.out.println("3. Ver Préstamos");
             System.out.println("4. Exportar usuarios a CSV");
             System.out.println("5. Exportar préstamos a CSV");
             System.out.println("6. Salir");
@@ -73,21 +38,21 @@ public class MainAdmin {
                 case "2" -> gestionarLibros();
                 case "3" -> prestamoService.listarTodosJoin().forEach(System.out::println);
                 case "4" -> {
-                    List<String> data = usuarioService.listarConPrestamosActivos();
-                    String path = ExportCSV.export("usuarios.csv", data);
+                    var usuarios = usuarioService.listarConPrestamosActivos();
+                    String path = ExportCSV.export("usuarios.csv", usuarios);
                     System.out.println("Exportado a: " + path);
                 }
                 case "5" -> {
                     var prestamos = prestamoService.listarTodosJoin();
-                    java.util.ArrayList<String> lines = new java.util.ArrayList<>();
+                    ArrayList<String> lines = new ArrayList<>();
                     lines.add("id,usuario,email,libro,isbn,prestamo,devolucion");
                     prestamos.forEach(p -> lines.add(
-                            p.getId()+","+
-                                    (p.getUsuario()!=null?p.getUsuario().getNombre():"")+","+
-                                    (p.getUsuario()!=null?p.getUsuario().getEmail():"")+","+
-                                    (p.getLibro()!=null?p.getLibro().getTitulo():"")+","+
-                                    p.getLibroIsbn()+","+
-                                    p.getFechaPrestamo()+","+
+                            p.getId() + "," +
+                                    (p.getUsuario() != null ? p.getUsuario().getNombre() : "") + "," +
+                                    (p.getUsuario() != null ? p.getUsuario().getEmail() : "") + "," +
+                                    (p.getLibro() != null ? p.getLibro().getTitulo() : "") + "," +
+                                    p.getLibroIsbn() + "," +
+                                    p.getFechaPrestamo() + "," +
                                     p.getFechaDevolucion()
                     ));
                     String path = ExportCSV.export("prestamos.csv", lines);
@@ -101,9 +66,9 @@ public class MainAdmin {
 
     private void gestionarUsuarios() {
         boolean back = false;
-        while(!back) {
+        while (!back) {
             System.out.println("\n--- Usuarios ---");
-            System.out.println("1. Listar (JOIN conteo préstamos)");
+            System.out.println("1. Listar usuarios con conteo de préstamos");
             System.out.println("2. Crear");
             System.out.println("3. Editar");
             System.out.println("4. Eliminar");
@@ -116,8 +81,8 @@ public class MainAdmin {
                     System.out.print("Nombre: "); String n = sc.nextLine();
                     System.out.print("Email: "); String e = sc.nextLine();
                     System.out.print("Password: "); String p = sc.nextLine();
-                    System.out.print("Rol (ADMIN/USUARIO): "); String r = sc.nextLine().toUpperCase();
-                    usuarioService.registrar(new User(0, n, e, p, Rol.valueOf(r)));
+                    Rol rol = e.endsWith("@admin.com") ? Rol.ADMIN : Rol.USUARIO; // ✅ lógica automática
+                    usuarioService.registrar(new User(0, n, e, p, rol));
                     System.out.println("Usuario creado.");
                 }
                 case "3" -> {
@@ -145,9 +110,9 @@ public class MainAdmin {
 
     private void gestionarLibros() {
         boolean back = false;
-        while(!back) {
+        while (!back) {
             System.out.println("\n--- Libros ---");
-            System.out.println("1. Listar (JOIN conteo préstamos)");
+            System.out.println("1. Listar libros con conteo de préstamos");
             System.out.println("2. Agregar");
             System.out.println("3. Editar");
             System.out.println("4. Eliminar");

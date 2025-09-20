@@ -46,7 +46,7 @@ public class BookRepositoryImpl implements BookRepositoryInterface {
             ps.setString(4, l.getIsbn());
             ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // MUESTRA QUE TIPO DE ERROR SE PRESENTA
         }
     }
 

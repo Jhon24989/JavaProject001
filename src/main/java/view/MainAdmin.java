@@ -24,13 +24,15 @@ public class MainAdmin {
     public void mostrar() {
         boolean salir = false;
         while (!salir) {
-            System.out.println("\n--- Panel ADMIN ---");
-            System.out.println("1. Gestionar Usuarios");
-            System.out.println("2. Gestionar Libros");
-            System.out.println("3. Ver Préstamos");
-            System.out.println("4. Exportar usuarios a CSV");
-            System.out.println("5. Exportar préstamos a CSV");
-            System.out.println("6. Salir");
+            System.out.println("""
+                    --- Panel ADMIN ---
+                    1. Gestionar Usuarios
+                    2. Gestionar Libros
+                    3. Ver Préstamos
+                    4. Exportar usuarios a CSV
+                    5. Exportar préstamos a CSV
+                    6. Salir
+                    """);
             System.out.print("Opción: ");
             String op = sc.nextLine();
             switch (op) {
@@ -67,12 +69,14 @@ public class MainAdmin {
     private void gestionarUsuarios() {
         boolean back = false;
         while (!back) {
-            System.out.println("\n--- Usuarios ---");
-            System.out.println("1. Listar usuarios con conteo de préstamos");
-            System.out.println("2. Crear");
-            System.out.println("3. Editar");
-            System.out.println("4. Eliminar");
-            System.out.println("5. Volver");
+            System.out.println("""
+                    --- Usuarios ---
+                    1. Listar usuarios
+                    2. Crear
+                    3. Editar
+                    4. Eliminar
+                    5. Volver
+                    """);
             System.out.print("Opción: ");
             String op = sc.nextLine();
             switch (op) {
@@ -81,7 +85,7 @@ public class MainAdmin {
                     System.out.print("Nombre: "); String n = sc.nextLine();
                     System.out.print("Email: "); String e = sc.nextLine();
                     System.out.print("Password: "); String p = sc.nextLine();
-                    Rol rol = e.endsWith("@admin.com") ? Rol.ADMIN : Rol.USUARIO; // ✅ lógica automática
+                    Rol rol = e.endsWith("@admin.com") ? Rol.ADMIN : Rol.USUARIO; // lógica automática
                     usuarioService.registrar(new User(0, n, e, p, rol));
                     System.out.println("Usuario creado.");
                 }
@@ -111,12 +115,14 @@ public class MainAdmin {
     private void gestionarLibros() {
         boolean back = false;
         while (!back) {
-            System.out.println("\n--- Libros ---");
-            System.out.println("1. Listar libros con conteo de préstamos");
-            System.out.println("2. Agregar");
-            System.out.println("3. Editar");
-            System.out.println("4. Eliminar");
-            System.out.println("5. Volver");
+            System.out.println("""
+                    --- Libros ---
+                    1. Listar libros 
+                    2. Agregar
+                    3. Editar
+                    4. Eliminar
+                    5. Volver
+                    """);
             System.out.print("Opción: ");
             String op = sc.nextLine();
             switch (op) {

@@ -60,14 +60,14 @@ public class Main {
 
                 User nuevo = new User(0, nombre, email, pwd, rol);
                 userService.registrar(nuevo);
-                System.out.println("Registrado correctamente como " + rol + ". Intentando iniciar sesión automáticamente...");
+                System.out.println("Registrado correctamente como " + rol + ". Intentando iniciar sesión ...");
 
                 Optional<User> nuevoLog = userService.login(email, pwd);
                 if (nuevoLog.isPresent()) {
-                    System.out.println("Inicio de sesión automático exitoso.");
+                    System.out.println("Inicio de sesión exitoso.");
                     return nuevoLog.get();
                 } else {
-                    System.out.println("No se pudo iniciar sesión automáticamente. Intenta iniciar sesión manualmente.");
+                    System.out.println("No se pudo iniciar sesión.Intenta iniciar sesión nuevamente.");
                     return null;
                 }
             }

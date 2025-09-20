@@ -15,18 +15,20 @@ public class MainUser {
     public void mostrar(int usuarioId) {
         boolean salir = false;
         while(!salir) {
-            System.out.println("\n--- Panel USUARIO ---");
-            System.out.println("1. Listar libros disponibles");
-            System.out.println("2. Buscar por título (JOIN)");
-            System.out.println("3. Pedir préstamo");
-            System.out.println("4. Devolver libro");
-            System.out.println("5. Mis préstamos (JOIN)");
-            System.out.println("6. Salir");
+            System.out.println("""
+                    --- Panel USUARIO ---
+                    1. Listar libros
+                    2. Buscar por título
+                    3. Pedir préstamo
+                    4. Devolver libro
+                    5. Mis préstamos
+                    6. Salir
+                    """);
             System.out.print("Opción: ");
             String op = sc.nextLine();
             switch (op) {
                 case "1" -> libroService.listarConPrestamosActivos()
-                        .stream().filter(l -> l.contains("SI")) // disponible=SI en CSV-like line
+                        .stream().filter(l -> l.contains("SI"))
                         .forEach(System.out::println);
                 case "2" -> {
                     System.out.print("Título contiene: "); String t = sc.nextLine();

@@ -9,7 +9,6 @@ public class Loan {
     private LocalDate fechaPrestamo;
     private LocalDate fechaDevolucion; // puede ser null
 
-    // Asociación / composición
     private User usuario;
     private Book libro;
 
@@ -29,21 +28,62 @@ public class Loan {
         this.fechaPrestamo = fechaPrestamo;
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-    public int getUsuarioId() { return usuarioId; }
-    public void setUsuarioId(int usuarioId) { this.usuarioId = usuarioId; }
-    public String getLibroIsbn() { return libroIsbn; }
-    public void setLibroIsbn(String libroIsbn) { this.libroIsbn = libroIsbn; }
-    public LocalDate getFechaPrestamo() { return fechaPrestamo; }
-    public void setFechaPrestamo(LocalDate fechaPrestamo) { this.fechaPrestamo = fechaPrestamo; }
-    public LocalDate getFechaDevolucion() { return fechaDevolucion; }
-    public void setFechaDevolucion(LocalDate fechaDevolucion) { this.fechaDevolucion = fechaDevolucion; }
+    public int getId() {
+        return id;
+    }
 
-    public User getUsuario() { return usuario; }
-    public void setUsuario(User usuario) { this.usuario = usuario; }
-    public Book getLibro() { return libro; }
-    public void setLibro(Book libro) { this.libro = libro; }
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(int usuarioId) {
+        this.usuarioId = usuarioId;
+    }
+
+    public String getLibroIsbn() {
+        return libroIsbn;
+    }
+
+    public void setLibroIsbn(String libroIsbn) {
+        this.libroIsbn = libroIsbn;
+    }
+
+    public LocalDate getFechaPrestamo() {
+        return fechaPrestamo;
+    }
+
+    public void setFechaPrestamo(LocalDate fechaPrestamo) {
+        this.fechaPrestamo = fechaPrestamo;
+    }
+
+    public LocalDate getFechaDevolucion() {
+        return fechaDevolucion;
+    }
+
+    public void setFechaDevolucion(LocalDate fechaDevolucion) {
+        this.fechaDevolucion = fechaDevolucion;
+    }
+
+
+    public User getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(User usuario) {
+        this.usuario = usuario;
+    }
+
+    public Book getLibro() {
+        return libro;
+    }
+
+    public void setLibro(Book libro) {
+        this.libro = libro;
+    }
 
     @Override
     public String toString() {

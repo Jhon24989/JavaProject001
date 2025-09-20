@@ -31,7 +31,7 @@ public class MainUser {
                         .stream().filter(l -> l.contains("SI"))
                         .forEach(System.out::println);
                 case "2" -> {
-                    System.out.print("Título contiene: "); String t = sc.nextLine();
+                    System.out.print("Título de libro: "); String t = sc.nextLine();
                     libroService.buscarPorTituloConJoin(t).forEach(System.out::println);
                 }
                 case "3" -> {

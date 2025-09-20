@@ -23,7 +23,6 @@ public class LoanServiceImpl implements LoanServiceInterface {
         if (!l.get().isDisponible()) throw new RuntimeException("Libro no disponible");
         Loan p = new Loan(usuarioId, isbn, LocalDate.now());
         repo.crear(p);
-        // Marcar libro como NO disponible
         Book lib = l.get();
         lib.setDisponible(false);
         libroRepo.actualizar(lib);
@@ -32,7 +31,6 @@ public class LoanServiceImpl implements LoanServiceInterface {
     @Override
     public void devolverPrestamo(int prestamoId) {
         repo.marcarDevolucion(prestamoId, LocalDate.now());
-        // NOTA: para actualizar la disponibilidad, idealmente recuperamos el ISBN.
         // Para simplificar, pedimos al admin que ajuste disponibilidad desde el menú Libros.
     }
 

@@ -17,7 +17,7 @@ import java.util.Scanner;
 
 public class MainAdmin {
     private final Scanner sc = new Scanner(System.in);
-    private final UserServiceInterface usuarioService = new UserServiceImpl(); // ✅ usar la implementación real
+    private final UserServiceInterface usuarioService = new UserServiceImpl();
     private final BookServiceInterface libroService = new BookServiceImpl();
     private final LoanServiceInterface prestamoService = new LoanServiceImpl();
 
@@ -85,7 +85,7 @@ public class MainAdmin {
                     System.out.print("Nombre: "); String n = sc.nextLine();
                     System.out.print("Email: "); String e = sc.nextLine();
                     System.out.print("Password: "); String p = sc.nextLine();
-                    Rol rol = e.endsWith("@admin.com") ? Rol.ADMIN : Rol.USUARIO; // lógica automática
+                    Rol rol = e.endsWith("@admin.com") ? Rol.ADMIN : Rol.USUARIO;
                     usuarioService.registrar(new User(0, n, e, p, rol));
                     System.out.println("Usuario creado.");
                 }

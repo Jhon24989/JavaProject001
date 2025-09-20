@@ -8,11 +8,10 @@ import java.sql.SQLException;
 
         private static final String URL = "jdbc:mysql://localhost:3306/bibliotecaVirtualV2";
         private static final String USER = "root"; // usuario de XAMPP
-        private static final String PASSWORD = ""; // si tu root no tiene contraseña, déjalo vacío
+        private static final String PASSWORD = "";
 
         public static Connection getConnection() throws SQLException {
             try {
-                // Cargar el driver explícitamente (a veces es necesario en proyectos locales)
                 Class.forName("com.mysql.cj.jdbc.Driver");
             } catch (ClassNotFoundException e) {
                 throw new SQLException("No se encontró el Driver de MySQL. ¿Agregaste la dependencia?", e);
